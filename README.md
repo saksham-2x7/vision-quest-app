@@ -1,1 +1,3 @@
 # VisionQuest
+
+VisionQuest is a modern image-search web application that allows users to explore and discover high-quality visuals from around the world. In the upcoming stages, the application will fetch live photographs from a public image API and dynamically render them into a flexible, responsive grid. For this scaffold, I chose a category suggestion chip row so that users can trigger one-click searches for popular topics without manual typing. Additionally, I chose a sticky navigation header with an emerald-and-slate color palette to ensure effortless search accessibility while scrolling and a distinct visual identity from the reference.
