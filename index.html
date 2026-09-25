@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VisionQuest — Discover the World's Visuals</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Sticky Header with Branded App Name and Tagline (Original Feature: Sticky Header) -->
+  <header id="header" class="site-header sticky-header">
+    <div class="brand">
+      <div class="brand-badge" aria-hidden="true">VQ</div>
+      <h1 class="brand-name">VisionQuest</h1>
+    </div>
+    <p class="tagline">Explore and discover high-resolution visuals from across the globe.</p>
+
+    <!-- Search Controls with Form, Accessible Label, Input, Search Button, and Clear Button -->
+    <form id="search-form" class="search-form" role="search">
+      <label for="search-input" class="visually-hidden">Search for images</label>
+      <div class="search-bar">
+        <input
+          id="search-input"
+          name="query"
+          type="search"
+          placeholder="Search images (e.g., mountains, architecture, wildlife)..."
+          aria-label="Search for images"
+          autocomplete="off"
+        />
+        <!-- Clear Control (Original Feature: Clear control) -->
+        <button id="clear-button" type="reset" class="clear-button" aria-label="Clear search">Clear</button>
+        <!-- Search Button with Unique ID -->
+        <button id="search-button" type="submit" class="search-button">Search</button>
+      </div>
+    </form>
+
+    <!-- Suggestion Chips (Original Feature: Category / quick-pick suggestion chips) -->
+    <div class="suggestion-chips" aria-label="Quick search categories">
+      <button type="button" class="chip">Nature</button>
+      <button type="button" class="chip">Architecture</button>
+      <button type="button" class="chip">Wildlife</button>
+      <button type="button" class="chip">Travel</button>
+      <button type="button" class="chip">Abstract</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Result Count Placeholder (Original Feature: Result-count placeholder) -->
+    <p id="result-count" class="result-count">Showing 0 results</p>
+
+    <!-- Status Line (Empty state message) -->
+    <p id="status" class="status" role="status" aria-live="polite">Search to see results</p>
+
+    <!-- Empty-State Message Element (Original Feature: Empty-state message element) -->
+    <div id="empty-state" class="empty-state">
+      <p class="empty-state-text">Search to see results</p>
+    </div>
+
+    <!-- Empty Results Container (Target for Part 2 image cards) -->
+    <section id="results" class="results results-grid" aria-label="Search results"></section>
+  </main>
+
+  <footer class="site-footer">
+    <p>VisionQuest &mdash; Built with plain HTML, CSS &amp; JavaScript.</p>
+  </footer>
+
+  <!-- Script loaded just before closing body -->
+  <script src="script.js"></script>
+</body>
+</html>
