@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Sticky Header with Branded App Name and Tagline (Original Feature: Sticky Header) -->
+  <!-- Sticky Header with Branded App Name and Tagline -->
   <header id="header" class="site-header sticky-header">
     <div class="brand">
       <div class="brand-badge" aria-hidden="true">VQ</div>
@@ -26,15 +26,18 @@
           placeholder="Search images (e.g., mountains, architecture, wildlife)..."
           aria-label="Search for images"
           autocomplete="off"
+          required
         />
-        <!-- Clear Control (Original Feature: Clear control) -->
-        <button id="clear-button" type="reset" class="clear-button" aria-label="Clear search">Clear</button>
+        <!-- Clear Control -->
+        <button id="clear-button" type="button" class="clear-button" aria-label="Clear search">Clear</button>
         <!-- Search Button with Unique ID -->
-        <button id="search-button" type="submit" class="search-button">Search</button>
+        <button id="search-button" type="submit" class="search-button">
+          <span class="button-text">Search</span>
+        </button>
       </div>
     </form>
 
-    <!-- Suggestion Chips (Original Feature: Category / quick-pick suggestion chips) -->
+    <!-- Suggestion Chips -->
     <div class="suggestion-chips" aria-label="Quick search categories">
       <button type="button" class="chip">Nature</button>
       <button type="button" class="chip">Architecture</button>
@@ -45,18 +48,47 @@
   </header>
 
   <main class="main-content">
-    <!-- Result Count Placeholder (Original Feature: Result-count placeholder) -->
-    <p id="result-count" class="result-count">Showing 0 results</p>
+    <!-- Result Count Indicator -->
+    <p id="result-count" class="result-count" aria-live="polite">Showing 0 results</p>
 
-    <!-- Status Line (Empty state message) -->
-    <p id="status" class="status" role="status" aria-live="polite">Search to see results</p>
+    <!-- Status Line for Accessibility & Announcements -->
+    <p id="status" class="status visually-hidden" role="status" aria-live="polite">Search to see results</p>
 
-    <!-- Empty-State Message Element (Original Feature: Empty-state message element) -->
-    <div id="empty-state" class="empty-state">
-      <p class="empty-state-text">Search to see results</p>
+    <!-- Loading Indicator (Part 3 Requirement) -->
+    <div id="loading-indicator" class="loading-state" role="status" aria-live="polite" style="display: none;">
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="loading-text">Searching Wikimedia Commons...</p>
     </div>
 
-    <!-- Empty Results Container (Target for Part 2 image cards) -->
+    <!-- Empty-State Message Element (Part 3 Requirement) -->
+    <div id="empty-state" class="empty-state">
+      <div class="state-icon" aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          <line x1="11" y1="8" x2="11" y2="12"></line>
+          <line x1="11" y1="14" x2="11.01" y2="14"></line>
+        </svg>
+      </div>
+      <h2 id="empty-state-title" class="empty-state-title">Search to see results</h2>
+      <p id="empty-state-text" class="empty-state-text">Type a word above or click a category chip to discover stunning photographs.</p>
+    </div>
+
+    <!-- Error-State Message Element (Part 3 Requirement) -->
+    <div id="error-state" class="error-state" role="alert" style="display: none;">
+      <div class="state-icon error-icon" aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h2 id="error-title" class="error-title">Something went wrong. Please try again.</h2>
+      <p id="error-description" class="error-description">We couldn't connect to the image service. Please check your internet connection and try again.</p>
+      <button id="retry-button" type="button" class="retry-button">Try Again</button>
+    </div>
+
+    <!-- Results Container (Responsive Grid with Skeleton Placeholders & Rendered Cards) -->
     <section id="results" class="results results-grid" aria-label="Search results"></section>
   </main>
 

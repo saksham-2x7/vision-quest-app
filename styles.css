@@ -1,6 +1,7 @@
 /* ==========================================================================
    VisionQuest — Stylesheet
    Color Palette: Emerald & Cyan with Deep Slate (distinct from reference purple)
+   Part 3: Loading States, Empty State, Error State, Polish & Responsiveness
    ========================================================================== */
 
 :root {
@@ -16,14 +17,19 @@
   --input-bg: #162036;
   --chip-bg: #1e2c47;
   --chip-hover: #283a5c;
+  --error-bg: #2a151b;
+  --error-border: #7f1d1d;
+  --error-text: #fca5a5;
+  --error-accent: #ef4444;
   --radius-sm: 8px;
-  --radius-md: 12px;
+  --radius-md: 14px;
   --radius-pill: 9999px;
   --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
   --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.35);
+  --transition-smooth: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Light Mode Overrides (Original Feature: Light/Dark theme support) */
+/* Light Mode Overrides */
 @media (prefers-color-scheme: light) {
   :root {
     --bg-primary: #f8fafc;
@@ -38,6 +44,10 @@
     --input-bg: #ffffff;
     --chip-bg: #e2e8f0;
     --chip-hover: #cbd5e1;
+    --error-bg: #fef2f2;
+    --error-border: #fecaca;
+    --error-text: #b91c1c;
+    --error-accent: #dc2626;
     --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     --shadow-glow: 0 0 15px rgba(5, 150, 105, 0.25);
   }
@@ -58,9 +68,10 @@ body {
   display: flex;
   flex-direction: column;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Accessibility: visually hidden label */
+/* Accessibility */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -73,7 +84,7 @@ body {
   border: 0;
 }
 
-/* ---------- Sticky Header (Original Feature) ---------- */
+/* ---------- Sticky Header ---------- */
 .site-header {
   padding: 32px 20px 24px;
   text-align: center;
@@ -98,13 +109,13 @@ body {
 }
 
 .brand-badge {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-sm);
   background: linear-gradient(135deg, var(--accent-emerald), var(--accent-cyan));
   color: #ffffff;
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,14 +134,14 @@ body {
 
 .tagline {
   color: var(--text-muted);
-  font-size: 1rem;
-  margin-bottom: 24px;
+  font-size: 0.98rem;
+  margin-bottom: 22px;
 }
 
 /* ---------- Search Form & Controls ---------- */
 .search-form {
   max-width: 640px;
-  margin: 0 auto 20px;
+  margin: 0 auto 18px;
 }
 
 .search-bar {
@@ -141,7 +152,7 @@ body {
   border-radius: var(--radius-pill);
   padding: 6px 8px 6px 18px;
   box-shadow: var(--shadow-sm);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: var(--transition-smooth);
   gap: 8px;
 }
 
@@ -157,24 +168,25 @@ body {
   color: var(--text-primary);
   font-size: 1rem;
   outline: none;
-  min-width: 120px;
+  min-width: 140px;
+  padding: 4px 0;
 }
 
 #search-input::placeholder {
   color: var(--text-muted);
 }
 
-/* Clear Control (Original Feature) */
+/* Clear Control */
 .clear-button {
   background: transparent;
   border: none;
   color: var(--text-muted);
   font-size: 0.875rem;
   font-weight: 500;
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition: var(--transition-smooth);
 }
 
 .clear-button:hover {
@@ -193,19 +205,28 @@ body {
   border-radius: var(--radius-pill);
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-  transition: transform 0.1s ease, box-shadow 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 86px;
 }
 
-.search-button:hover {
+.search-button:hover:not(:disabled) {
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
   transform: translateY(-1px);
 }
 
-.search-button:active {
+.search-button:active:not(:disabled) {
   transform: translateY(1px);
 }
 
-/* ---------- Category Suggestion Chips (Original Feature) ---------- */
+.search-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ---------- Category Suggestion Chips ---------- */
 .suggestion-chips {
   display: flex;
   flex-wrap: wrap;
@@ -222,7 +243,7 @@ body {
   font-weight: 500;
   border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  transition: var(--transition-smooth);
 }
 
 .chip:hover {
@@ -240,37 +261,198 @@ body {
   padding: 24px 20px 48px;
 }
 
-/* Result-Count Placeholder (Original Feature) */
+/* Result-Count */
 .result-count {
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.925rem;
+  font-weight: 500;
   color: var(--text-muted);
-  margin-bottom: 8px;
+  margin-bottom: 24px;
+  min-height: 22px;
+  transition: color 0.2s ease;
+}
+
+.result-count strong {
+  color: var(--accent-emerald);
 }
 
 /* Status Line */
 .status {
   text-align: center;
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--text-muted);
-  margin-bottom: 24px;
-  min-height: 24px;
+  margin-bottom: 20px;
 }
 
-/* Empty-State Message Element (Original Feature) */
+/* ---------- State Containers (Loading, Empty, Error) ---------- */
+
+/* 1. Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.spinner {
+  width: 42px;
+  height: 42px;
+  border: 3.5px solid var(--border-color);
+  border-top-color: var(--accent-emerald);
+  border-right-color: var(--accent-cyan);
+  border-radius: 50%;
+  animation: spin 0.85s linear infinite;
+}
+
+.loading-text {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Skeleton Placeholder Cards */
+.skeleton-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.skeleton-thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 0%,
+    var(--input-bg) 50%,
+    var(--bg-card) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 0%,
+    var(--border-color) 50%,
+    var(--bg-card) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* 2. Empty State */
 .empty-state {
   text-align: center;
-  padding: 40px 20px;
+  padding: 48px 24px;
   background-color: var(--bg-surface);
   border: 1px dashed var(--border-color);
   border-radius: var(--radius-md);
-  margin-bottom: 24px;
+  max-width: 620px;
+  margin: 16px auto 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.state-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-cyan);
+  margin-bottom: 16px;
+}
+
+.empty-state-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
 }
 
 .empty-state-text {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: var(--text-muted);
-  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* 3. Error State */
+.error-state {
+  text-align: center;
+  padding: 48px 24px;
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: var(--radius-md);
+  max-width: 620px;
+  margin: 16px auto 32px;
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.15);
+}
+
+.error-icon {
+  color: var(--error-accent);
+}
+
+.error-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--error-text);
+  margin-bottom: 8px;
+}
+
+.error-description {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+.retry-button {
+  background: linear-gradient(135deg, var(--accent-emerald), var(--accent-emerald-dark));
+  color: #ffffff;
+  border: none;
+  font-size: 0.925rem;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  transition: var(--transition-smooth);
+}
+
+.retry-button:hover {
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45);
+  transform: translateY(-1px);
 }
 
 /* ---------- Responsive CSS Grid (Core Requirement) ---------- */
@@ -278,22 +460,114 @@ body {
 .results,
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
 }
 
-/* Image Card placeholder styles for future parts */
+/* ---------- Image Card Polish & Interactions ---------- */
 .card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   overflow: hidden;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  animation: cardFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   border-color: var(--accent-emerald);
+  box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.35),
+              0 0 16px rgba(16, 185, 129, 0.2);
+}
+
+.card-image-link {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: var(--input-bg);
+  text-decoration: none;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-image.loaded {
+  opacity: 1;
+}
+
+.card:hover .card-image {
+  transform: scale(1.05);
+}
+
+/* Card Hover Badge */
+.card-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(11, 17, 32, 0.75);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: var(--transition-smooth);
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card:hover .card-badge {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.card-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 /* ---------- Footer ---------- */
@@ -304,24 +578,40 @@ body {
   font-size: 0.85rem;
   border-top: 1px solid var(--border-color);
   background-color: var(--bg-surface);
+  margin-top: auto;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
+/* ---------- Responsive Adjustments ---------- */
+@media (max-width: 640px) {
+  .site-header {
+    padding: 24px 16px 18px;
+  }
   .brand-name {
-    font-size: 1.8rem;
+    font-size: 1.75rem;
+  }
+  .tagline {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
   }
   .search-bar {
     flex-wrap: wrap;
     border-radius: var(--radius-md);
     padding: 10px;
+    gap: 8px;
   }
   #search-input {
     width: 100%;
-    margin-bottom: 8px;
+    font-size: 0.95rem;
   }
-  .clear-button, .search-button {
+  .clear-button,
+  .search-button {
     flex: 1;
     text-align: center;
+    padding: 10px;
+    min-height: 44px; /* Mobile touch friendly target */
+  }
+  .results-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
   }
 }
